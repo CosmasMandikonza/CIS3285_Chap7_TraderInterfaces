@@ -252,6 +252,20 @@ public class SimpleTradeValidatorTests
         Assert.IsFalse(isValid);
     }
 
+    [TestMethod]
+    public void EmptyCurrencyString_ReturnsFalse()
+    {
+        // Arrange
+        var validator = new SimpleTradeValidator(new StubLogger());
+        string[] strData = { "", "4444", "1.00" };
+
+        // Act
+        bool result = validator.ValidateTradeData(strData, 1);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
     private sealed class StubLogger : ILogger
     {
         public void LogMessage(string message, params object[] args)
