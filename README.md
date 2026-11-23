@@ -25,11 +25,10 @@ Run the test project with:
 dotnet test Unit8_SRP_F24.sln
 ```
 
-The sample writes trades to a LocalDB database using the connection string in
-`TradeProcessor.cs`. The integration test also queries Azure SQL using the
-connection string in `TradeProcessorTests.cs`. Configure both for databases
-available in your environment before running the application or tests; the test
-inserts trade records.
+The sample application uses `AdoNetTradeStorage` to store trades in SQL Server.
+Configure that connection for your own environment before running the console
+application. The current automated tests, including the `TradeProcessorTests`,
+use test data and stub implementations; they do not need a SQL Server connection.
 
 ## Unit 9 Learning Activity: Read from HTTP
 
@@ -56,3 +55,23 @@ dotnet run --project Unit8_SRP_F24/Unit8_SRP_F24.csproj -- --url
 The URL tests cover the existing **1-trade** and **5-trade** URLs and the **4-trade Fall 2024** URL from the assignment. The REST test expects **3 trades** from the instructor's HTTPS API.
 
 **Note:** The full test suite includes database-dependent tests requiring SQL Server. The dedicated GitHub Actions workflow focuses on the learning activity's HTTP provider tests and does not require a database.
+
+## Unit 9 Assignment: Trade validation, XML logging, and tests
+
+This fork also completes **Parts 3–5 of the Unit 9 Assignment**.
+
+- `SimpleTradeValidator` allows trade amounts from **1,000 to 1,000,000**, inclusive, and rejects malformed currency codes, invalid amounts, and non-positive prices.
+- `ConsoleLogger` prints to the console and writes a valid `trades.xml` file. It keeps entries under a `<logs>` root, with `<log><type>...</type><message>...</message></log>` for each message.
+- `SimpleTradeValidatorTests` includes `EmptyCurrencyString_ReturnsFalse`, and `ConsoleLoggerTests` verifies XML log entries and safe escaping of special characters.
+- Each requested assignment part was committed separately.
+- The written **Unit 8 vs Unit 9 test comparison** and submission link are in [SUBMISSION.md](SUBMISSION.md).
+
+Run all tests:
+
+```powershell
+dotnet test Unit8_SRP_F24.sln
+```
+
+The GitHub Actions **Unit 9 Full Test Suite** workflow runs all tests with .NET 10.
+The runtime application still needs the configured SQL Server storage connection,
+but the automated test suite does not.
