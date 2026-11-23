@@ -1,0 +1,27 @@
+name: Unit 9 HTTP Provider Tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  http-provider-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Unit8_SRP_F24.sln
+
+      - name: Build
+        run: dotnet build Unit8_SRP_F24.sln --no-restore
+
+      - name: Run HTTP trade provider tests
+        run: dotnet test Unit8_SRP_F24Tests/Unit8_SRP_F24Tests.csproj --no-build --filter 'FullyQualifiedName~URLTradeDataProviderTests|FullyQualifiedName~RestfulTradeDataProviderTests' --logger 'console;verbosity=normal'
