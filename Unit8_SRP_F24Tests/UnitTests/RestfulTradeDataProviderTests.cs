@@ -1,4 +1,3 @@
-using System;
 using Unit8_SRP_F24;
 using Unit8_SRP_F24.Contracts;
 
@@ -7,32 +6,28 @@ namespace Unit8_SRP_F24Tests.UnitTests;
 [TestClass()]
 public class RestfulTradeDataProviderTests
 {
-    private int countStrings(IEnumerable<string> collectionOfStrings)
+    private int CountStrings(IEnumerable<string> trades)
     {
-        // count the trades
         int count = 0;
-        foreach (var trade in collectionOfStrings)
+        foreach (string trade in trades)
         {
             count++;
         }
         return count;
     }
 
-
     [TestMethod()]
     public void TestSize3()
     {
-        //Arrange
+        // Arrange: use the HTTPS endpoint listed in the Unit 9 assignment.
         ILogger logger = new ConsoleLogger();
-        string restfulURL = "http://unit9trader.azurewebsites.net/api/TradeData";
+        string restfulURL = "https://unit9trader.azurewebsites.net/api/TradeData";
+        ITradeDataProvider provider = new RestfulTradeDataProvider(restfulURL, logger);
 
-        ITradeDataProvider tradeProvider = new RestfulTradeDataProvider(restfulURL, logger);
+        // Act
+        IEnumerable<string> trades = provider.ReadTradeData();
 
-        //Act
-        IEnumerable<string> trades = tradeProvider.ReadTradeData();
-
-        //Assert
-
-        Assert.AreEqual(countStrings(trades), 3);
+        // Assert
+        Assert.AreEqual(3, CountStrings(trades));
     }
 }
