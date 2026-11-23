@@ -1,0 +1,27 @@
+name: Unit 9 Full Test Suite
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  full-test-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore solution
+        run: dotnet restore Unit8_SRP_F24.sln
+
+      - name: Build solution
+        run: dotnet build Unit8_SRP_F24.sln --no-restore
+
+      - name: Run all tests
+        run: dotnet test Unit8_SRP_F24.sln --no-build --logger 'console;verbosity=normal'
